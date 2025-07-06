@@ -61,15 +61,6 @@ class ApiConfig:
     
     async def initialize(self):
         """Initialize API credentials."""
-        try:
-            # Always try to get OpenWeather API key regardless of endpoint
-            self.weather_api_key = get_secret('OPENWEATHER_API_KEY')
-        except Exception as e:
-            logger.warning(f"Failed to get OpenWeather API key from Secret Manager: {e}")
-            self.weather_api_key = os.getenv('OPENWEATHER_API_KEY')
-            if not self.weather_api_key:
-                raise ConfigurationError("OpenWeather API key not available")
-
         if not self.use_vertex:
             try:
                 self.api_key = get_secret('GOOGLE_API_KEY')
@@ -91,19 +82,19 @@ else:
     VOICE = os.getenv('VOICE_DEV_API', 'Puck')
 
 # Cloud Function URLs with validation
-CLOUD_FUNCTIONS = {
-    "get_weather": os.getenv('WEATHER_FUNCTION_URL'),
-    "get_weather_forecast": os.getenv('FORECAST_FUNCTION_URL'),
-    "get_next_appointment": os.getenv('CALENDAR_FUNCTION_URL'),
-    "get_past_appointments": os.getenv('PAST_APPOINTMENTS_FUNCTION_URL'),
-}
+# CLOUD_FUNCTIONS = {
+#     "get_weather": os.getenv('WEATHER_FUNCTION_URL'),
+#     "get_weather_forecast": os.getenv('FORECAST_FUNCTION_URL'),
+#     "get_next_appointment": os.getenv('CALENDAR_FUNCTION_URL'),
+#     "get_past_appointments": os.getenv('PAST_APPOINTMENTS_FUNCTION_URL'),
+# }
 
 # Validate Cloud Function URLs
-for name, url in CLOUD_FUNCTIONS.items():
-    if not url:
-        logger.warning(f"Missing URL for cloud function: {name}")
-    elif not url.startswith('https://'):
-        logger.warning(f"Invalid URL format for {name}: {url}")
+# for name, url in CLOUD_FUNCTIONS.items():
+#     if not url:
+#         logger.warning(f"Missing URL for cloud function: {name}")
+#     elif not url.startswith('https://'):
+#         logger.warning(f"Invalid URL format for {name}: {url}")
 
 # Load system instructions
 try:
